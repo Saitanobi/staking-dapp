@@ -1,0 +1,10 @@
+.mainApp {
+  flex-grow: 1;
+  min-height: calc(76vh - 96px);
+  margin-top: 96px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-grow: 1;
+}
