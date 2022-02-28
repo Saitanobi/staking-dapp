@@ -12,6 +12,7 @@ import { CssBaseline, ThemeProvider, createTheme, Fab, Typography, Snackbar, Ale
 import { CurrencyExchangeOutlined } from "@mui/icons-material";
 import { getBalances } from "./state/wallet/wallet";
 import { getStake } from "./state/stake/stake";
+import { getPrices } from "./state/price/price";
 
 const uniswapLink = 'https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x5e9f35e8163c44cd7e606bdd716abed32ad2f1c6&use=v2&chain=mainnet';
 
@@ -41,7 +42,7 @@ const App: React.FC = (): React.ReactElement => {
       setSeverity('info');
     }, 5000);
     
-  }, [tx]);
+  }, [tx, currentTx]);
 
   function selectSeverity(val: string): 'success' | 'error' | 'info' {
     if (val === 'fulfilled') {
@@ -156,13 +157,14 @@ const App: React.FC = (): React.ReactElement => {
     } else {
       Promise.resolve(dispatch(getStake()));
     }
-  }, [connectWallet]);
+  }, [connectWallet, dispatch]);
 
   React.useEffect(() => {
     if (connect.connected) {
       Promise.resolve(subscribe());
     }
-  }, [connect.connected, subscribe]);
+    Promise.resolve(dispatch(getPrices()));
+  }, [connect.connected, subscribe, dispatch]);
 
   return (
     <>

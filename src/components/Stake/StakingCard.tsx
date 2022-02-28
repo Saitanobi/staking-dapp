@@ -17,15 +17,27 @@ import StakeModal from "./StakeModal";
 
 const StakingCard: React.FC = () => {
     const [modal, setModal] = React.useState<boolean>(false);
+    const [apy, setApy] = React.useState<number>(0);
     const [stakeAmount, setStakeAmount] = React.useState<string>('0');
-    const { stake, wallet } = useAppSelector((state: RootState) => {
+    const { price, stake, wallet } = useAppSelector((state: RootState) => {
         return {
+            price: state.price,
             stake: state.stake,
             wallet: state.wallet
         }
     });
 
     const dispatch: AppDispatch = useAppDispatch();
+
+    React.useEffect(() => {
+        if (price.status === 'fulfilled') {
+            console.log(price);
+            console.log(stake.rewardPerToken);
+            const apy1 = (stake.rewardPerToken[0] * price.saitama) / 14 / price.saitanobi * 100;
+            const apy2 = (stake.rewardPerToken[1] * price.shinja) / 14 / price.shinja * 100;
+            setApy(apy1 + apy2);
+        }
+    }, [price, stake.rewardPerToken]);
 
     const cardStyle: SxProps = {
         borderRadius: '8px',
@@ -126,7 +138,7 @@ const StakingCard: React.FC = () => {
         <Box sx={cardStyle}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', p: '12px' }}>
                 <Box>
-                    <Chip color="primary" label="APY 66%" />
+                    <Chip color="primary" label={`APY ${apy}%`} />
                 </Box>
                 <Box>
                     <Chip
