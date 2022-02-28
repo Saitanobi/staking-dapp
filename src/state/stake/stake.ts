@@ -27,8 +27,8 @@ export const getStake: any = createAsyncThunk('stake/getStake', async () => {
         let rewards = ['0', '0'];
         let staked = '0';
         let allowance = '0';
-        const contract: Contract = new ethers.Contract(stakingAddress, stakeAbi, signer.provider ? signer.provider : web3);
-        const token: Contract = new ethers.Contract(SAITANOBI, tokenAbi, signer.provider ? signer.provider : web3);
+        const contract: Contract = new ethers.Contract(stakingAddress, stakeAbi, web3);
+        const token: Contract = new ethers.Contract(SAITANOBI, tokenAbi, web3);
         const rewardPerToken = await contract.rewardPerToken().then((res: BigNumber[]) => {
             return res.map((item: BigNumber) => item.toString());
         });
