@@ -16,14 +16,8 @@ import { getPrices } from "./state/price/price";
 
 const uniswapLink = 'https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurrency=0x5e9f35e8163c44cd7e606bdd716abed32ad2f1c6&use=v2&chain=mainnet';
 
-interface ICurrentTx {
-  hash: string;
-  status: 'fulfilled' | 'failed' | 'pending' | 'standby';
-}
-
 const App: React.FC = (): React.ReactElement => {
-  const [currentTx, setCurrentTx] = React.useState<ICurrentTx | null>(null);
-  const [severity, setSeverity] = React.useState<'success' | 'error' | 'warning' | 'info'>('info');
+  const [currentTx, setCurrentTx] = React.useState<string | null>(null);
   const dispatch = useAppDispatch();
   const { connect, tx } = useAppSelector((state: RootState) => {
     return {
@@ -31,28 +25,6 @@ const App: React.FC = (): React.ReactElement => {
       tx: state.tx
     }
   });
-
-  React.useEffect(() => {
-    setCurrentTx(tx.hashes.at(-1) || null);
-    if (currentTx !== null) {
-      setSeverity(selectSeverity(currentTx.status));
-    }
-    setTimeout(() => {
-      setCurrentTx(null);
-      setSeverity('info');
-    }, 5000);
-    
-  }, [tx, currentTx]);
-
-  function selectSeverity(val: string): 'success' | 'error' | 'info' {
-    if (val === 'fulfilled') {
-      return 'success'
-    } else if (val === 'failed') {
-      return 'error'
-    } else {
-      return 'info'
-    }
-  }
 
   const theme = createTheme({
     typography: {
@@ -98,6 +70,15 @@ const App: React.FC = (): React.ReactElement => {
       }
     },
   })
+
+  const txListener = React.useCallback(async (tx: any) => {
+    web3.on('pending', async (tx: any) => {
+      console.log(tx);
+      setCurrentTx(tx.hash);
+      dispatch(await getBalances());
+      dispatch(await getStake());
+    });
+  }, [dispatch])
 
   const connectWallet = React.useCallback(async (service: 'injected' | 'walletconnect'): Promise<void> => {
     try {
@@ -145,6 +126,37 @@ const App: React.FC = (): React.ReactElement => {
 
       provider.on('chainChanged', async (chainId: number) => {
         console.log(`Chain changed to ${chainId}`);
+        // window.location.reload();
+      });
+
+      provider.on('pending', async (tx: any) => {
+        console.log(tx);
+      })
+
+    } else {
+      web3.on('accountsChanged', async (accounts: string[]) => {
+        if (accounts === null || accounts.length === 0) {
+          dispatch(reset({}));
+        } else {
+          let ens: string | null = null;
+          if (web3) {
+            ens = await web3.lookupAddress(accounts[0]);
+          }
+          dispatch(changeAccount({
+            address: accounts[0],
+            ens
+          }));
+          console.log(`Account changed to ${accounts[0]}`)
+        }
+      });
+
+      web3.on('disconnect', async () => {
+        console.log('Disconnected');
+        dispatch(reset({}));
+      });
+
+      web3.on('chainChanged', async (chainId: number) => {
+        console.log(`Chain changed to ${chainId}`);
         window.location.reload();
       });
     }
@@ -166,6 +178,12 @@ const App: React.FC = (): React.ReactElement => {
     Promise.resolve(dispatch(getPrices()));
   }, [connect.connected, subscribe, dispatch]);
 
+  React.useEffect(() => {
+    if (tx.hashes.length > 0) {
+      Promise.resolve(txListener(tx.hashes.at(-1)));  
+    }
+  }, [tx, txListener])
+
   return (
     <>
     <ThemeProvider theme={theme}>
@@ -185,13 +203,13 @@ const App: React.FC = (): React.ReactElement => {
       <Snackbar
         open={currentTx !== null}
         onClose={() => setCurrentTx(null)}
+        autoHideDuration={5000}
+        action={() => window.open(`https://etherscan.io/tx/${currentTx}`, `_blank noreferrer`)}
         sx={{ cursor: 'pointer', fontSize: '8px' }}
       >
         <Alert
-          onClick={() => window.open(`https://etherscan.io/tx/${currentTx?.hash}`, `_blank noreferrer`)}
-          onClose={() => setCurrentTx(null)}
-          severity={severity}>
-          {`Tx sent: ${currentTx?.hash}`}
+          onClose={() => setCurrentTx('')}>
+          {`Tx sent: ${currentTx}`}
         </Alert>
       </Snackbar>
     </ThemeProvider>
