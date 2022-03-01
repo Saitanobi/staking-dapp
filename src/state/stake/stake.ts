@@ -32,7 +32,7 @@ export const getStake: any = createAsyncThunk('stake/getStake', async () => {
         const rewardPerToken = await contract.rewardPerToken().then((res: BigNumber[]) => {
             return res.map((item: BigNumber) => item.toString());
         });
-        if (signer.provider !== undefined) {
+        if (signer?.provider !== undefined) {
             const address = await signer.getAddress();
             rewards = await contract.earned(address).then((res: BigNumber[]) => {
                 return res.map((item: BigNumber) => ethers.utils.formatUnits(item.toString(), 'gwei'));
