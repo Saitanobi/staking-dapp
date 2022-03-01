@@ -31,9 +31,9 @@ const StakingCard: React.FC = () => {
 
     React.useEffect(() => {
         if (price.status === 'fulfilled') {
-            const apy1 = (stake.rewardPerToken[0] * price.saitama) / 14 / price.saitanobi * 100;
-            const apy2 = (stake.rewardPerToken[1] * price.shinja) / 14 / price.shinja * 100;
-            setApy(apy1 + apy2);
+            const apy1 = Number(stake.rewardPerToken[0]) * price.saitama
+            const apy2 = Number(stake.rewardPerToken[1]) * price.shinja;
+            setApy(Math.round(apy1 + apy2));
         }
     }, [price, stake.rewardPerToken]);
 
