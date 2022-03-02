@@ -43,7 +43,8 @@ const App: React.FC = (): React.ReactElement => {
       ].join(','),
       fontWeightRegular: 600,
       fontWeightLight: 500,
-      fontWeightBold: 700
+      fontWeightBold: 700,
+      fontSize: 14
     },
     palette: {
       primary: {
@@ -126,12 +127,8 @@ const App: React.FC = (): React.ReactElement => {
 
       provider.on('chainChanged', async (chainId: number) => {
         console.log(`Chain changed to ${chainId}`);
-        // window.location.reload();
+        window.location.reload();
       });
-
-      provider.on('pending', async (tx: any) => {
-        console.log(tx);
-      })
 
     } else {
       web3.on('accountsChanged', async (accounts: string[]) => {
@@ -157,7 +154,6 @@ const App: React.FC = (): React.ReactElement => {
 
       web3.on('chainChanged', async (chainId: number) => {
         console.log(`Chain changed to ${chainId}`);
-        window.location.reload();
       });
     }
   }, [dispatch]);
@@ -182,7 +178,7 @@ const App: React.FC = (): React.ReactElement => {
     if (tx.hashes.length > 0) {
       Promise.resolve(txListener(tx.hashes.at(-1)));  
     }
-  }, [tx, txListener])
+  }, [tx, txListener]);
 
   return (
     <>
@@ -204,12 +200,16 @@ const App: React.FC = (): React.ReactElement => {
         open={currentTx !== null}
         onClose={() => setCurrentTx(null)}
         autoHideDuration={5000}
-        action={() => window.open(`https://etherscan.io/tx/${currentTx}`, `_blank noreferrer`)}
         sx={{ cursor: 'pointer', fontSize: '8px' }}
       >
         <Alert
           onClose={() => setCurrentTx('')}>
-          {`Tx sent: ${currentTx}`}
+          <Typography
+            onClick={() => window.open(`https://etherscan.io/tx/${currentTx}`, `_blank noreferrer`)}
+            variant="body1"
+            component="div">
+            {`Tx sent: ${currentTx}`}
+          </Typography>
         </Alert>
       </Snackbar>
     </ThemeProvider>
