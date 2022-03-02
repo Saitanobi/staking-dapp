@@ -43,8 +43,7 @@ const App: React.FC = (): React.ReactElement => {
       ].join(','),
       fontWeightRegular: 600,
       fontWeightLight: 500,
-      fontWeightBold: 700,
-      fontSize: 14
+      fontWeightBold: 700
     },
     palette: {
       primary: {
@@ -188,14 +187,6 @@ const App: React.FC = (): React.ReactElement => {
       <Box className="mainApp">
         <StakingCard />
       </Box>
-      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-        <Fab variant="extended" color="primary" aria-label="buy" onClick={() => window.open(uniswapLink, '_blank noreferrer')}>
-          <CurrencyExchangeOutlined sx={{ mr: 1 }} />
-          <Typography variant="body1" component="div">
-            Buy Saitanobi
-          </Typography>
-        </Fab>
-      </Box>
       <Snackbar
         open={currentTx !== null}
         onClose={() => setCurrentTx(null)}
@@ -212,6 +203,14 @@ const App: React.FC = (): React.ReactElement => {
           </Typography>
         </Alert>
       </Snackbar>
+      <Box sx={{ position: 'fixed', bottom: '12px', width: '100%', display: 'flex', justifyContent: 'center' }}>
+        <Fab variant="extended" color="primary" aria-label="buy" onClick={() => window.open(uniswapLink, '_blank noreferrer')}>
+          <CurrencyExchangeOutlined sx={{ mr: 1 }} />
+          <Typography variant="body1" component="div">
+            Buy Saitanobi
+          </Typography>
+        </Fab>
+      </Box>
     </ThemeProvider>
     </>
   );
