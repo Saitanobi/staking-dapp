@@ -1,5 +1,4 @@
-import { Backdrop, Chip, Modal, Stack, SxProps, TextField, Typography } from "@mui/material";
-import { Box } from "@mui/system";
+import { Backdrop, Box, Chip, Modal, Stack, SxProps, TextField, Typography } from "@mui/material";
 import { BigNumber } from "ethers";
 import * as React from "react";
 import { useAppSelector } from "../../state/hooks";

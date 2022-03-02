@@ -1,8 +1,7 @@
-import { AppBar, Toolbar, Typography, SxProps } from "@mui/material";
-import { Box } from "@mui/system";
+import { AppBar, Box, Toolbar, SxProps } from "@mui/material";
 import * as React from "react";
 import Wallet from "./Wallet";
-import saitanobi from "../../assets/images/saitanobi.svg";
+import saitanobi from "../../assets/images/stakingden.png";
 
 interface INavigationProps {
     connectFunc: Function;
@@ -23,9 +22,9 @@ const Navigation: React.FC<INavigationProps> = ({ connectFunc }) => {
         <Box sx={{ flexGrow: 1 }}>
             <AppBar sx={appBarStyle}>
                 <Toolbar variant="dense">
-                <Typography variant="h5" component="div">
-                    <img src={saitanobi} alt="saitanobi" height="12px" />
-                </Typography>
+                <div style={{display: 'flex', alignItems: 'center'}}>
+                    <img src={saitanobi} alt="saitanobi" height="36px" />
+                </div>
                 <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'flex-end' }}>
                     <Wallet connectFunc={connectFunc} />
                 </Box>

@@ -1,6 +1,5 @@
 import { TransactionReceipt } from "@ethersproject/providers";
-import { Chip, Divider, Stack, Typography } from "@mui/material";
-import { Box, SxProps } from "@mui/system";
+import { Box, SxProps, Chip, Divider, Stack, Typography } from "@mui/material";
 import { Contract, ContractTransaction, ethers } from "ethers";
 import * as React from "react";
 import saitanobi from "../../assets/images/saitanobi.png";

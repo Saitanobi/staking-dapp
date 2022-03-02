@@ -6,9 +6,8 @@ import { RootState } from "./store";
 import { changeAccount, makeConnection, reset } from "./state/connect/connect";
 import detectEthereumProvider from "@metamask/detect-provider";
 import Navigation from "./components/Nav/Navigation";
-import { Box } from "@mui/system";
 import StakingCard from "./components/Stake/StakingCard";
-import { CssBaseline, ThemeProvider, createTheme, Fab, Typography, Snackbar, Alert } from "@mui/material";
+import { Box, CssBaseline, ThemeProvider, createTheme, Fab, Typography, Snackbar, Alert } from "@mui/material";
 import { CurrencyExchangeOutlined } from "@mui/icons-material";
 import { getBalances } from "./state/wallet/wallet";
 import { getStake } from "./state/stake/stake";
@@ -69,7 +68,7 @@ const App: React.FC = (): React.ReactElement => {
         disabled: '#909497'
       }
     },
-  })
+  }, {index: 1})
 
   const txListener = React.useCallback(async (tx: any) => {
     web3.on('pending', async (tx: any) => {
