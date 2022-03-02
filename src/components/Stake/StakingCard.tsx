@@ -5,7 +5,9 @@ import { Contract, ContractTransaction, ethers } from "ethers";
 import * as React from "react";
 import saitanobi from "../../assets/images/saitanobi.png";
 import { useAppDispatch, useAppSelector } from "../../state/hooks";
+import { getStake } from "../../state/stake/stake";
 import { addTx, updateTx } from "../../state/tx/tx";
+import { getBalances } from "../../state/wallet/wallet";
 import { AppDispatch, RootState } from "../../store";
 import { SAITANOBI, stakingAddress } from "../../utils/addresses";
 import { signer } from "../../utils/base";
@@ -55,6 +57,7 @@ const StakingCard: React.FC = () => {
                     dispatch(updateTx({ status: 'failed', hash: tx.hash }))
                 } else {
                     dispatch(updateTx({ status: 'fulfilled', hash: res.transactionHash }));
+                    await dispatch(getStake());
                 }
             });
         }
@@ -75,6 +78,8 @@ const StakingCard: React.FC = () => {
                     dispatch(updateTx({ status: 'failed', hash: tx.hash }))
                 } else {
                     dispatch(updateTx({ status: 'fulfilled', hash: res.transactionHash }));
+                    await dispatch(getStake());
+                    await dispatch(getBalances());
                 }
             });
         }
@@ -95,6 +100,7 @@ const StakingCard: React.FC = () => {
                     dispatch(updateTx({ status: 'failed', hash: tx.hash }))
                 } else {
                     dispatch(updateTx({ status: 'fulfilled', hash: res.transactionHash }));
+                    await dispatch(getStake());
                 }
             });
         }
@@ -115,6 +121,8 @@ const StakingCard: React.FC = () => {
                      dispatch(updateTx({ status: 'failed', hash: tx.hash }))
                  } else {
                      dispatch(updateTx({ status: 'fulfilled', hash: res.transactionHash }));
+                     await dispatch(getBalances());
+                     await dispatch(getStake());
                  }
              });
         }
@@ -142,7 +150,7 @@ const StakingCard: React.FC = () => {
             </Box>
             <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', p: '24px 0' }}>
                 <Box>
-                    <img src={saitanobi} alt="Saitanobi" width="96px" />
+                    <img src={saitanobi} alt="Saitanobi" width="76px" />
                 </Box>
                 <Typography variant="body1" component="div">
                     Stake Saitanobi
