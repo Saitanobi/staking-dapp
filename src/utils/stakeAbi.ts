@@ -1,4 +1,7 @@
 export const stakeAbi = [
+    // Get reward for duration
+    "function getRewardForDuration() external view returns (uint[])",
+
     // Get current reward rates
     "function rewardPerToken() external view returns (uint[])",
 

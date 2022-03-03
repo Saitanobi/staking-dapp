@@ -11,6 +11,7 @@ interface IStakeState {
     staked: string;
     allowance: string;
     rewardPerToken: string[];
+    totalStaked: string;
     status: 'pending' | 'fulfilled' | 'failed' | 'standby';
 }
 
@@ -19,6 +20,7 @@ const initialState: IStakeState = {
     rewardPerToken: ['0', '0'],
     staked: '0',
     allowance: '0',
+    totalStaked: '0',
     status: 'standby'
 }
 
@@ -31,7 +33,8 @@ export const getStake: any = createAsyncThunk('stake/getStake', async () => {
         const token: Contract = new ethers.Contract(SAITANOBI, tokenAbi, web3);
         const rewardPerToken = await contract.rewardPerToken().then((res: BigNumber[]) => {
             return res.map((item: BigNumber) => item.toString());
-        });
+        }).catch(() => { return ['0', '0'] });
+        const totalStaked = await contract.totalSupply().then((res: BigNumber) => ethers.utils.formatUnits(res, 'gwei'));
         if (signer?.provider !== undefined) {
             const address = await signer.getAddress();
             rewards = await contract.earned(address).then((res: BigNumber[]) => {
@@ -42,7 +45,7 @@ export const getStake: any = createAsyncThunk('stake/getStake', async () => {
         }
 
         return {
-            rewardPerToken, rewards, staked, allowance
+            rewardPerToken, rewards, staked, allowance, totalStaked
         }
     }
     catch(e) {
@@ -52,7 +55,8 @@ export const getStake: any = createAsyncThunk('stake/getStake', async () => {
             rewardPerToken: ['0', '0'],
             rewards: '0',
             staked: '0',
-            allowance: '0'
+            allowance: '0',
+            totalStaked: '0'
         }
     }
 });
@@ -73,6 +77,7 @@ export const stakeSlice: Slice = createSlice({
             state.staked = action.payload.staked;
             state.rewards = action.payload.rewards;
             state.rewardPerToken = action.payload.rewardPerToken;
+            state.totalStaked = action.payload.totalStaked;
             state.status = 'fulfilled';
         }
     }

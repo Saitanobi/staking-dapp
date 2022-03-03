@@ -1,5 +1,5 @@
 import { TransactionReceipt } from "@ethersproject/providers";
-import { Box, SxProps, Chip, Divider, Stack, Typography } from "@mui/material";
+import { Box, SxProps, Chip, Divider, Stack, Typography, CircularProgress } from "@mui/material";
 import { Contract, ContractTransaction, ethers } from "ethers";
 import * as React from "react";
 import saitanobi from "../../assets/images/saitanobi.png";
@@ -30,11 +30,12 @@ const StakingCard: React.FC = () => {
 
     React.useEffect(() => {
         if (price.status === 'fulfilled') {
-            const apy1 = Number(stake.rewardPerToken[0]) * price.saitama
+            const apy1 = Number(stake.rewardPerToken[0]) * price.saitama;
             const apy2 = Number(stake.rewardPerToken[1]) * price.shinja;
-            setApy(Math.round(apy1 + apy2));
+            console.log( price.saitanobi * 69000000000000000000000);
+            setApy(Math.round((apy1 + apy2) / (Number(stake.totalStaked) * price.saitanobi) * (36500)));
         }
-    }, [price, stake.rewardPerToken]);
+    }, [price, stake]);
 
     const cardStyle: SxProps = {
         borderRadius: '8px',
@@ -135,7 +136,14 @@ const StakingCard: React.FC = () => {
         <Box sx={cardStyle}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', p: '12px' }}>
                 <Box>
-                    <Chip color="primary" label={`APY ${apy}%`} />
+                    <Chip color="primary" label={
+                        (stake.status === 'pending' || price.status === 'pending') ?
+                        <React.Fragment>
+                            <CircularProgress size={12} sx={{ color: 'white' }} />
+                        </React.Fragment>
+                        :
+                        `APY ${apy}%`}
+                    />
                 </Box>
                 <Box>
                     <Chip
