@@ -32,7 +32,6 @@ const StakingCard: React.FC = () => {
         if (price.status === 'fulfilled') {
             const apy1 = Number(stake.rewardPerToken[0]) * price.saitama;
             const apy2 = Number(stake.rewardPerToken[1]) * price.shinja;
-            console.log( price.saitanobi * 69000000000000000000000);
             setApy(Math.round((apy1 + apy2) / (Number(stake.totalStaked) * price.saitanobi) * (36500)));
         }
     }, [price, stake]);
