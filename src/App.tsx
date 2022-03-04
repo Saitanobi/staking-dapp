@@ -18,12 +18,7 @@ const uniswapLink = 'https://app.uniswap.org/#/swap?inputCurrency=ETH&outputCurr
 const App: React.FC = (): React.ReactElement => {
   const [currentTx, setCurrentTx] = React.useState<string | null>(null);
   const dispatch = useAppDispatch();
-  const { connect, tx } = useAppSelector((state: RootState) => {
-    return {
-      connect: state.connect,
-      tx: state.tx
-    }
-  });
+  const connect = useAppSelector((state: RootState) => state.connect);
 
   const theme = createTheme({
     typography: {
@@ -69,15 +64,6 @@ const App: React.FC = (): React.ReactElement => {
       }
     },
   }, {index: 1})
-
-  const txListener = React.useCallback(async (tx: any) => {
-    web3.on('pending', async (tx: any) => {
-      console.log(tx);
-      setCurrentTx(tx.hash);
-      dispatch(await getBalances());
-      dispatch(await getStake());
-    });
-  }, [dispatch])
 
   const connectWallet = React.useCallback(async (service: 'injected' | 'walletconnect'): Promise<void> => {
     try {
@@ -172,19 +158,13 @@ const App: React.FC = (): React.ReactElement => {
     Promise.resolve(dispatch(getPrices()));
   }, [connect.connected, subscribe, dispatch]);
 
-  React.useEffect(() => {
-    if (tx.hashes.length > 0) {
-      Promise.resolve(txListener(tx.hashes.at(-1)));  
-    }
-  }, [tx, txListener]);
-
   return (
     <>
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Navigation connectFunc={connectWallet} />
       <Box className="mainApp">
-        <StakingCard />
+        <StakingCard setCurrentTx={setCurrentTx} />
       </Box>
       <Snackbar
         open={currentTx !== null}

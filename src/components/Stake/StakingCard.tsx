@@ -13,11 +13,18 @@ import { signer } from "../../utils/base";
 import { stakeAbi } from "../../utils/stakeAbi";
 import { tokenAbi } from "../../utils/tokenAbi";
 import StakeModal from "./StakeModal";
+import WithdrawModal from "./WithdrawModal";
 
-const StakingCard: React.FC = () => {
+interface IStakingCardProps {
+    setCurrentTx: Function
+}
+
+const StakingCard: React.FC<IStakingCardProps> = ({ setCurrentTx }) => {
     const [modal, setModal] = React.useState<boolean>(false);
+    const [wModal, setWModal] = React.useState<boolean>(false);
     const [apy, setApy] = React.useState<number>(0);
     const [stakeAmount, setStakeAmount] = React.useState<string>('0');
+    const [withdrawAmount, setWithdrawAmount] = React.useState<string>('0');
     const { price, stake, wallet } = useAppSelector((state: RootState) => {
         return {
             price: state.price,
@@ -50,6 +57,7 @@ const StakingCard: React.FC = () => {
             const contract: Contract = new ethers.Contract(SAITANOBI, tokenAbi, signer.provider);
             const tx: ContractTransaction = await contract.connect(signer).approve(stakingAddress, ethers.utils.parseEther('999999999999999')).catch((e: Error) => console.log(e));
             dispatch(addTx({status: 'pending', hash: tx.hash}));
+            setCurrentTx(tx.hash);
             const listen = async () => await signer.provider?.waitForTransaction(tx.hash);
             await listen().then(async (res: TransactionReceipt | undefined) => {
                 if (res === undefined) {
@@ -71,6 +79,7 @@ const StakingCard: React.FC = () => {
             const contract: Contract = new ethers.Contract(stakingAddress, stakeAbi, signer.provider);
             const tx: ContractTransaction = await contract.connect(signer).stake(ethers.utils.parseUnits(amount, 'gwei'));
             dispatch(addTx({status: 'pending', hash: tx.hash}));
+            setCurrentTx(tx.hash);
             const listen = async () => await signer.provider?.waitForTransaction(tx.hash);
             await listen().then(async (res: TransactionReceipt | undefined) => {
                 if (res === undefined) {
@@ -93,6 +102,7 @@ const StakingCard: React.FC = () => {
             const contract: Contract = new ethers.Contract(stakingAddress, stakeAbi, signer.provider);
             const tx: ContractTransaction = await contract.connect(signer).getReward();
             dispatch(addTx({status: 'pending', hash: tx.hash}));
+            setCurrentTx(tx.hash);
             const listen = async () => await signer.provider?.waitForTransaction(tx.hash);
             await listen().then(async (res: TransactionReceipt | undefined) => {
                 if (res === undefined) {
@@ -108,12 +118,14 @@ const StakingCard: React.FC = () => {
         }
     }
 
-    const withdrawFunc = async (): Promise<void> => {
+    const withdrawFunc = async (val: string): Promise<void> => {
         try {
              if (await signer.getChainId() !== 1) throw Error;
+             setWithdrawAmount('0');
              const contract: Contract = new ethers.Contract(stakingAddress, stakeAbi, signer.provider);
-             const tx: ContractTransaction = await contract.connect(signer).withdraw(ethers.utils.parseUnits(stake.staked, 'gwei'));
+             const tx: ContractTransaction = await contract.connect(signer).withdraw(ethers.utils.parseUnits(val, 'gwei'));
              dispatch(addTx({status: 'pending', hash: tx.hash}));
+             setCurrentTx(tx.hash);
              const listen = async () => await signer.provider?.waitForTransaction(tx.hash);
              await listen().then(async (res: TransactionReceipt | undefined) => {
                  if (res === undefined) {
@@ -149,8 +161,8 @@ const StakingCard: React.FC = () => {
                         variant="outlined"
                         color="warning"
                         label="Withdraw"
-                        disabled={Number(stake.staked) === 0}
-                        onClick={async () => await withdrawFunc()}
+                        disabled={Number(stake.staked) < 1}
+                        onClick={() => setWModal(true)}
                         clickable />
                 </Box>
             </Box>
@@ -211,6 +223,13 @@ const StakingCard: React.FC = () => {
             input={stakeAmount}
             handleChange={(val: string) => setStakeAmount(val)}
             stake={stakeFunc}
+        />
+        <WithdrawModal
+            open={wModal}
+            close={() => setWModal(false)}
+            input={withdrawAmount}
+            handleChange={(val: string) => setWithdrawAmount(val)}
+            withdraw={withdrawFunc}
         />
         </>
     );
