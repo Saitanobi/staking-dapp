@@ -7,6 +7,7 @@ interface IPriceState {
     saitanobi: number;
     saitama: number;
     shinja: number;
+    shib: number;
     status: 'pending' | 'fulfilled' | 'failed' | 'standby';
 }
 
@@ -23,6 +24,7 @@ const initialState: IPriceState = {
     saitanobi: 0,
     saitama: 0,
     shinja: 0,
+    shib: 0,
     status: 'standby'
 }
 
@@ -56,6 +58,7 @@ export const priceSlice: Slice = createSlice({
                 state.saitanobi = action.payload.find((item: IResponse) => item.symbol === "SAITANOBI")?.price ?? 0;
                 state.saitama = action.payload.find((item: IResponse) => item.symbol === "SAITAMA")?.price ?? 0;
                 state.shinja = action.payload.find((item: IResponse) => item.symbol === "SHINJA")?.price ?? 0;
+                state.shib = action.payload.find((item: IResponse) => item.symbol === "SHIB")?.price ?? 0;
                 state.status = 'fulfilled';
             } else {
                 state.status = 'failed';

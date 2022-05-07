@@ -16,8 +16,8 @@ interface IStakeState {
 }
 
 const initialState: IStakeState = {
-    rewards: ['0', '0'],
-    rewardPerToken: ['0', '0'],
+    rewards: ['0', '0', '0'],
+    rewardPerToken: ['0', '0', '0'],
     staked: '0',
     allowance: '0',
     totalStaked: '0',
@@ -26,14 +26,14 @@ const initialState: IStakeState = {
 
 export const getStake: any = createAsyncThunk('stake/getStake', async () => {
     try {
-        let rewards = ['0', '0'];
+        let rewards = ['0', '0', '0'];
         let staked = '0';
         let allowance = '0';
-        const contract: Contract = new ethers.Contract(stakingAddress, stakeAbi, web3);
-        const token: Contract = new ethers.Contract(SAITANOBI, tokenAbi, web3);
+        const contract: Contract = new ethers.Contract(stakingAddress, stakeAbi, signer?.provider);
+        const token: Contract = new ethers.Contract(SAITANOBI, tokenAbi, signer?.provider);
         const rewardPerToken = await contract.rewardPerToken().then((res: BigNumber[]) => {
             return res.map((item: BigNumber) => item.toString());
-        }).catch(() => { return ['0', '0'] });
+        }).catch(() => { return ['0', '0', '0'] });
         const totalStaked = await contract.totalSupply().then((res: BigNumber) => ethers.utils.formatUnits(res, 'gwei'));
         if (signer?.provider !== undefined) {
             const address = await signer.getAddress();
@@ -52,7 +52,7 @@ export const getStake: any = createAsyncThunk('stake/getStake', async () => {
         console.log(e);
 
         return {
-            rewardPerToken: ['0', '0'],
+            rewardPerToken: ['0', '0', '0'],
             rewards: '0',
             staked: '0',
             allowance: '0',

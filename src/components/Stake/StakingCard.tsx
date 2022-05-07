@@ -39,7 +39,8 @@ const StakingCard: React.FC<IStakingCardProps> = ({ setCurrentTx }) => {
         if (price.status === 'fulfilled') {
             const apy1 = Number(stake.rewardPerToken[0]) * price.saitama;
             const apy2 = Number(stake.rewardPerToken[1]) * price.shinja;
-            setApy(Math.round((apy1 + apy2) / (Number(stake.totalStaked) * price.saitanobi) * (36500)));
+            const apy3 = Number(stake.rewardPerToken[2]) * price.shib;
+            setApy(Math.round((apy1 + apy2 + apy3) / (Number(stake.totalStaked) * price.saitanobi) * (36500)));
         }
     }, [price, stake]);
 
@@ -184,6 +185,9 @@ const StakingCard: React.FC<IStakingCardProps> = ({ setCurrentTx }) => {
                     </Typography>
                     <Typography variant="caption" component="div">
                         {`Pending Shinja Rewards: ${Number(stake.rewards[1]).toLocaleString('en-US')}`}
+                    </Typography>
+                    <Typography variant="caption" component="div">
+                        {`Pending Shiba Inu Rewards: ${Number(stake.rewards[2]).toLocaleString('en-US')}`}
                     </Typography>
                 </Stack>
             </Box>
