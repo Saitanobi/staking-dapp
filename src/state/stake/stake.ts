@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction, Slice } from "@reduxjs/to
 import { BigNumber, Contract, ethers } from "ethers";
 import { RootState } from "../../store";
 import { SAITANOBI, stakingAddress } from "../../utils/addresses";
-import { signer, web3 } from "../../utils/base";
+import { signer } from "../../utils/base";
 import { stakeAbi } from "../../utils/stakeAbi";
 import { tokenAbi } from "../../utils/tokenAbi";
 
