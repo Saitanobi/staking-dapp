@@ -1,9 +1,9 @@
 import detectEthereumProvider from "@metamask/detect-provider";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { ethers, Signer} from "ethers";
-import { JsonRpcProvider } from "@ethersproject/providers";
+import { JsonRpcProvider, Web3Provider } from "@ethersproject/providers";
 
-export let web3: JsonRpcProvider = new ethers.providers.JsonRpcProvider(`${process.env.REACT_APP_ETH_RPC}`);
+export let web3: JsonRpcProvider | Web3Provider = new ethers.providers.JsonRpcProvider(`${process.env.REACT_APP_ETH_RPC}`);
 export let signer: Signer;
 
 export const setProvider = async (service: 'injected' | 'walletconnect') => {

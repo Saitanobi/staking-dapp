@@ -40,7 +40,11 @@ const StakingCard: React.FC<IStakingCardProps> = ({ setCurrentTx }) => {
             const apy1 = Number(stake.rewardPerToken[0]) * price.saitama;
             const apy2 = Number(stake.rewardPerToken[1]) * price.shinja;
             const apy3 = Number(stake.rewardPerToken[2]) * price.shib;
-            setApy(Math.round((apy1 + apy2 + apy3) / (Number(stake.totalStaked) * price.saitanobi) * (36500)));
+            if (Number(stake.totalStaked) === 0 || price.saitanobi === 0) {
+                setApy(0);
+            } else {
+                setApy(Math.round((apy1 + apy2 + apy3) / (Number(stake.totalStaked) * price.saitanobi) * (36500)));    
+            }
         }
     }, [price, stake]);
 

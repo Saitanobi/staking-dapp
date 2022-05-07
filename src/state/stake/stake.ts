@@ -55,7 +55,7 @@ export const getStake: any = createAsyncThunk('stake/getStake', async () => {
 
         return {
             rewardPerToken: ['0', '0', '0'],
-            rewards: '0',
+            rewards: ['0', '0', '0'],
             staked: '0',
             allowance: '0',
             totalStaked: '0'
