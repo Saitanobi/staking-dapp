@@ -121,7 +121,7 @@ const WithdrawModal: React.FC<IWithdrawModalProps> = ({ open, close, handleChang
                             <Chip
                                 size="small"
                                 color="primary"
-                                label="Stake"
+                                label="Withdraw"
                                 sx={{ minWidth: "84px", fontSize: "12px" }}
                                 clickable
                                 onClick={handleWithdraw}
