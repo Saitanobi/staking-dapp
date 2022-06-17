@@ -37,9 +37,9 @@ const StakingCard: React.FC<IStakingCardProps> = ({ setCurrentTx }) => {
 
     React.useEffect(() => {
         if (price.status === 'fulfilled') {
-            const apy1 = Number(stake.rewardPerToken[0]) * price.saitama;
+            const apy1 = Number(stake.rewardPerToken[0]) * price.shib;
             const apy2 = Number(stake.rewardPerToken[1]) * price.shinja;
-            const apy3 = Number(stake.rewardPerToken[2]) * price.shib;
+            const apy3 = Number(stake.rewardPerToken[2]) * price.saitama;
             if (Number(stake.totalStaked) === 0 || price.saitanobi === 0) {
                 setApy(0);
             } else {
@@ -185,13 +185,13 @@ const StakingCard: React.FC<IStakingCardProps> = ({ setCurrentTx }) => {
             <Box sx={{ display: 'flex', justifyContent: 'flex-start', p: '12px' }}>
                 <Stack sx={{ textAlign: 'left' }}>
                     <Typography variant="caption" component="div">
-                        {`Pending Saitama Rewards: ${Number(stake.rewards[0]).toLocaleString('en-US')}`}
+                        {`Pending Shiba Inu Rewards: ${Number(stake.rewards[0]).toLocaleString('en-US')}`}
                     </Typography>
                     <Typography variant="caption" component="div">
                         {`Pending Shinja Rewards: ${Number(stake.rewards[1]).toLocaleString('en-US')}`}
                     </Typography>
                     <Typography variant="caption" component="div">
-                        {`Pending Shiba Inu Rewards: ${Number(stake.rewards[2]).toLocaleString('en-US')}`}
+                        {`Pending Saitama Inu Rewards: ${Number(stake.rewards[2]).toLocaleString('en-US')}`}
                     </Typography>
                 </Stack>
             </Box>
