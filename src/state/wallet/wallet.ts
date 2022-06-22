@@ -18,7 +18,7 @@ const initialState: IWalletState = {
 export const getBalances: any = createAsyncThunk('wallet/getBalances', async (): Promise<{ethBalance: string, saitanobiBalance: string}> => {
     try {
         const address = await signer.getAddress();
-        const chainId = await signer.getChainId();
+        // const chainId = await signer.getChainId();
         //if (chainId !== 1) throw Error;
         const ethBalance = await signer.getBalance().then((res: BigNumber) => ethers.utils.formatEther(res.toString())).catch(() => '0');
         const tokenContract = new ethers.Contract(SAITANOBI, tokenAbi, signer.provider);
