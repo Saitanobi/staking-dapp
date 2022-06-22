@@ -35,7 +35,7 @@ export const getStake: any = createAsyncThunk('stake/getStake', async () => {
             return res.map((item: BigNumber) => item.toString());
         }).catch(() => { return ['0', '0', '0'] });
         const totalStaked = await contract.totalSupply().then((res: BigNumber) => ethers.utils.formatUnits(res, 'gwei'));
-        if (signer?.provider !== undefined) {
+        if (signer) {
             const address = await signer.getAddress();
             staked = await contract.balanceOf(address).then((res: BigNumber) => ethers.utils.formatUnits(res.toString(), 'gwei'));
             allowance = await token.allowance(address, stakingAddress).then((res: BigNumber) => ethers.utils.formatUnits(res.toString(), 'gwei'));

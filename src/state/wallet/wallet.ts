@@ -19,7 +19,7 @@ export const getBalances: any = createAsyncThunk('wallet/getBalances', async ():
     try {
         const address = await signer.getAddress();
         const chainId = await signer.getChainId();
-        if (chainId !== 1) throw Error;
+        //if (chainId !== 1) throw Error;
         const ethBalance = await signer.getBalance().then((res: BigNumber) => ethers.utils.formatEther(res.toString())).catch(() => '0');
         const tokenContract = new ethers.Contract(SAITANOBI, tokenAbi, signer.provider);
         const saitanobiBalance = await tokenContract.balanceOf(address).then((res: BigNumber) => ethers.utils.formatUnits(res.toString(), 'gwei')).catch(() => '0');

@@ -43,7 +43,7 @@ const StakingCard: React.FC<IStakingCardProps> = ({ setCurrentTx }) => {
             if (Number(stake.totalStaked) === 0 || price.saitanobi === 0) {
                 setApy(0);
             } else {
-                setApy(Math.round((apy1 + apy2 + apy3) / (Number(stake.totalStaked) * price.saitanobi) * (36500)));    
+                setApy(Math.round((apy1 + apy2 + apy3) / (Number(stake.totalStaked) * price.saitanobi)) / (365 / 14));    
             }
         }
     }, [price, stake]);
@@ -58,7 +58,7 @@ const StakingCard: React.FC<IStakingCardProps> = ({ setCurrentTx }) => {
 
     const approveFunc = async (): Promise<void> => {
         try {
-            if (await signer.getChainId() !== 1) throw Error;
+            // if (await signer.getChainId() !== 1) throw Error;
             const contract: Contract = new ethers.Contract(SAITANOBI, tokenAbi, signer.provider);
             const tx: ContractTransaction = await contract.connect(signer).approve(stakingAddress, ethers.utils.parseEther('999999999999999')).catch((e: Error) => console.log(e));
             dispatch(addTx({status: 'pending', hash: tx.hash}));
@@ -80,7 +80,7 @@ const StakingCard: React.FC<IStakingCardProps> = ({ setCurrentTx }) => {
 
     const stakeFunc = async (amount: string): Promise<void> => {
         try {
-            if (await signer.getChainId() !== 1) throw Error;
+            // if (await signer.getChainId() !== 1) throw Error;
             const contract: Contract = new ethers.Contract(stakingAddress, stakeAbi, signer.provider);
             const tx: ContractTransaction = await contract.connect(signer).stake(ethers.utils.parseUnits(amount, 'gwei'));
             dispatch(addTx({status: 'pending', hash: tx.hash}));
@@ -103,7 +103,7 @@ const StakingCard: React.FC<IStakingCardProps> = ({ setCurrentTx }) => {
 
     const claimFunc = async (): Promise<void> => {
         try {
-            if (await signer.getChainId() !== 1) throw Error;
+            // if (await signer.getChainId() !== 1) throw Error;
             const contract: Contract = new ethers.Contract(stakingAddress, stakeAbi, signer.provider);
             const tx: ContractTransaction = await contract.connect(signer).getReward();
             dispatch(addTx({status: 'pending', hash: tx.hash}));
@@ -125,7 +125,7 @@ const StakingCard: React.FC<IStakingCardProps> = ({ setCurrentTx }) => {
 
     const withdrawFunc = async (val: string): Promise<void> => {
         try {
-             if (await signer.getChainId() !== 1) throw Error;
+             // if (await signer.getChainId() !== 1) throw Error;
              setWithdrawAmount('0');
              const contract: Contract = new ethers.Contract(stakingAddress, stakeAbi, signer.provider);
              const tx: ContractTransaction = await contract.connect(signer).withdraw(ethers.utils.parseUnits(val, 'gwei'));
@@ -191,7 +191,7 @@ const StakingCard: React.FC<IStakingCardProps> = ({ setCurrentTx }) => {
                         {`Pending Shinja Rewards: ${Number(stake.rewards[1]).toLocaleString('en-US')}`}
                     </Typography>
                     <Typography variant="caption" component="div">
-                        {`Pending Saitama Inu Rewards: ${Number(stake.rewards[2]).toLocaleString('en-US')}`}
+                        {`Pending Saitama Rewards: ${Number(stake.rewards[2]).toLocaleString('en-US')}`}
                     </Typography>
                 </Stack>
             </Box>
